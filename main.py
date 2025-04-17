@@ -11,7 +11,7 @@ load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
 CHANNEL_ID = int(os.getenv("CHANNEL_ID"))
 SELF_URL = os.getenv("SELF_URL")
-REMOTE_DB = "https://raw.githubusercontent.com/Tseng-Gina/chiikawa-discord-bot-koyeb/refs/heads/main/products.json?token=GHSAT0AAAAAADCMJPINGXB3UA2TGSNWXPQ22ABC6PQ"
+REMOTE_DB = "https://raw.githubusercontent.com/Tseng-Gina/chiikawa-discord-bot-koyeb/main/products.json"
 
 # 🧠 Discord Bot 初始化
 intents = discord.Intents.default()

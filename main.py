@@ -24,7 +24,7 @@ tree = app_commands.CommandTree(bot)
 keyword_responses = {
     "婆婆": ["我在呢", "怎麼了寶貝", "婆婆也想你"],
     "666": ["過來坐坐", "過來坐下"],
-    "屁眼": ["炸屁眼", "屁眼好癢"]
+    "屁眼": ["https://cdn.discordapp.com/attachments/1355201012914327594/1362651119641165975/image0.gif"]
 }
 
 # ✅ 擷取遠端資料庫（GitHub）

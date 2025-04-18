@@ -23,7 +23,8 @@ tree = app_commands.CommandTree(bot)
 # ✅ 關鍵字對話語錄
 keyword_responses = {
     "婆婆": ["我在呢", "怎麼了寶貝", "婆婆也想你"],
-    "666": ["過來坐坐", "不愧是你", "坐下聽婆婆講道理"]
+    "666": ["過來坐坐", "過來坐下"]
+    "屁眼": ["哈哈哈 炸屁眼"]
 }
 
 # ✅ 擷取遠端資料庫（GitHub）
@@ -78,7 +79,7 @@ def compare_products(old, new):
 async def send_results(channel, added, removed):
     now = datetime.utcnow()
     tw_time = now.hour + 8
-    await channel.send(f"🕒 已完成比對，現在是台灣時間 {tw_time % 24:02d}:{now.minute:02d}")
+    await channel.send(f"🕒 我抓完了寶子們，現在是{tw_time % 24:02d}:{now.minute:02d}")
 
     if added:
         await channel.send(f"🆕 發現 {len(added)} 筆新商品：")
@@ -91,7 +92,7 @@ async def send_results(channel, added, removed):
         await channel.send("✅ 沒有新商品。")
 
     if removed:
-        await channel.send("@everyone ❌ 有商品從官網下架了，請注意！")
+        await channel.send("@everyone 寶子們有商品從官網下架了，請注意！")
         for item in removed:
             embed = discord.Embed(title=item["title"], url=item["link"], color=0xff6666)
             if item["image"]:
@@ -103,7 +104,7 @@ async def send_results(channel, added, removed):
 # ✅ Slash 指令：/check_stock
 @tree.command(name="check_stock", description="手動比對吉伊卡哇商品")
 async def check_stock_slash(interaction: discord.Interaction):
-    await interaction.response.send_message("🔍 正在比對吉伊卡哇商品...", ephemeral=True)
+    await interaction.response.send_message("🔍 正在比對吉伊卡哇商品...")
     old_data = load_remote_db()
     new_data = fetch_products()
     added, removed = compare_products(old_data, new_data)

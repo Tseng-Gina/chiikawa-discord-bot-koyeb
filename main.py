@@ -22,8 +22,14 @@ tree = app_commands.CommandTree(bot)
 
 # ✅ 關鍵字對話語錄
 keyword_responses = {
-    "婆婆": ["我在呢🩷", "怎麼了寶貝💖", "婆婆也想你💞"],
+    "婆婆": ["我在呢🩷", "怎麼了寶貝💖", "婆婆也想你💞", "吃我唧唧"],
+    "芸柵": ["芸柵愛錢包 💗forever💗"],
+    "去死": ["@henry086623"],
+    "離婚": ["@henry086623"],
+    "閉嘴": ["你他媽才閉嘴"],
     "666": ["過來坐坐🪑", "過來坐下🪑"],
+    "雞巴": ["操你媽曾靜儒"],
+    "皮炎": ["https://cdn.discordapp.com/attachments/1355201012914327594/1362651119641165975/image0.gif", "https://tenor.com/view/howlpro-howlprotocol-howl-howlup-crypto-gif-25551815", "https://tenor.com/view/taco-bell-gif-20228662"],
     "屁眼": ["https://cdn.discordapp.com/attachments/1355201012914327594/1362651119641165975/image0.gif", "https://tenor.com/view/howlpro-howlprotocol-howl-howlup-crypto-gif-25551815", "https://tenor.com/view/taco-bell-gif-20228662"]
 }
 
@@ -141,7 +147,7 @@ async def daily_check():
     now = datetime.utcnow()
     tw_hour = (now.hour + 8) % 24
     tw_minute = now.minute
-    if (tw_hour == 9 and now.minute == 30) or (tw_hour == 20 and now.minute == 26):
+    if (tw_hour == 9 and now.minute == 30) or (tw_hour == 14 and now.minute == 30):
         log_time = f"{tw_hour:02}:{tw_minute:02}"
         print(f"寶子們現在是⏰ [{log_time}] 今天過得好嗎")
         channel = bot.get_channel(CHANNEL_ID)

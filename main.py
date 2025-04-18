@@ -92,7 +92,7 @@ async def send_results(channel, added, removed):
         await channel.send("✅ 沒有新商品。")
 
     if removed:
-        await channel.send("@everyone 寶子們有商品從官網下架了，請注意！")
+        await channel.send("寶子們有商品從官網下架了，請注意！")
         for item in removed:
             embed = discord.Embed(title=item["title"], url=item["link"], color=0xff6666)
             if item["image"]:

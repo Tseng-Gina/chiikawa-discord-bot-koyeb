@@ -149,7 +149,7 @@ async def daily_check():
     await bot.wait_until_ready()
     now = datetime.utcnow()
     h, m = (now.hour + 8) % 24, now.minute
-    if (h, m) in [(9, 30), (00, 3)]:
+    if (h, m) in [(9, 30), (14, 30)]:
         channel = bot.get_channel(CHANNEL_ID)
         if channel:
             chi_old = load_remote_db(CHIIKAWA_DB)

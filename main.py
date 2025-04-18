@@ -140,10 +140,10 @@ async def daily_check():
     await bot.wait_until_ready()
     now = datetime.utcnow()
     tw_hour = (now.hour + 8) % 24
-    if (tw_hour == 9 and now.minute == 30) or (tw_hour == 19 and now.minute == 55):
+    if (tw_hour == 9 and now.minute == 30) or (tw_hour == 20 and now.minute == 7):
         log_time = f"{tw_hour:02}:{minute:02}"
         print(f"寶子們現在是⏰ [{log_time}] 今天過得好嗎")
-        channel = bot.get_channel(CHANNEL_ID)
+        channel = "1355201012914327594"
         if channel:
             old_data = load_remote_db()
             new_data = fetch_products()

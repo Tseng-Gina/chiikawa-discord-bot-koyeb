@@ -23,12 +23,18 @@ tree = app_commands.CommandTree(bot)
 # ✅ 關鍵字對話語錄
 keyword_responses = {
     "婆婆": ["我在呢🩷", "怎麼了寶貝💖", "婆婆也想你💞", "吃我唧唧"],
-    "芸柵": ["芸柵愛錢包 💗forever💗"],
-    "去死": ["@henry086623"],
-    "離婚": ["@henry086623"],
+    "幹你娘": ["唉呦這麼兇兇喔人家會怕怕", "不要森氣嘛", "要幫你吹吹?"],
+    "操你媽": ["唉呦這麼兇兇喔人家會怕怕", "不要森氣嘛", "要幫你吹吹?"],
+    "芸柵": ["芸柵愛錢包💗forever💗"],
+    "錢包": ["芸柵愛錢包💗forever💗"],
+    "去死": ["<@855009651010437171>"],
+    "離婚": ["<@855009651010437171>"],
     "閉嘴": ["你他媽才閉嘴"],
     "666": ["過來坐坐🪑", "過來坐下🪑"],
     "雞巴": ["操你媽曾靜儒"],
+    "正男": ["https://tenor.com/view/shomp-scary-goblin-running-gif-13908288", "https://tenor.com/view/clash-of-clans-gif-23752619"],
+    "正豪": ["https://tenor.com/view/shomp-scary-goblin-running-gif-13908288", "https://tenor.com/view/clash-of-clans-gif-23752619"],
+    "屌": ["https://tenor.com/view/penis-run-messy-gif-19909875", "https://tenor.com/view/mikhail-perez-mikhail-dick-penis-hotdog-gif-19442083", "https://tenor.com/view/dick-penis-dildo-forest-running-gif-16272085"],
     "皮炎": ["https://cdn.discordapp.com/attachments/1355201012914327594/1362651119641165975/image0.gif", "https://tenor.com/view/howlpro-howlprotocol-howl-howlup-crypto-gif-25551815", "https://tenor.com/view/taco-bell-gif-20228662"],
     "屁眼": ["https://cdn.discordapp.com/attachments/1355201012914327594/1362651119641165975/image0.gif", "https://tenor.com/view/howlpro-howlprotocol-howl-howlup-crypto-gif-25551815", "https://tenor.com/view/taco-bell-gif-20228662"]
 }

@@ -93,10 +93,10 @@ def compare_products(old, new):
 async def send_results(channel, added, removed, tag=""):
     now = datetime.utcnow()
     time_str = f"{(now.hour + 8)%24:02}:{now.minute:02}"
-    await channel.send(f"🕒 [{time_str}] {tag} 抓完了～")
+    await channel.send(f"🕒 我抓完了 {tag} 寶子們，現在是 [{time_str}] ")
 
     if added:
-        await channel.send(f"🆕 {tag} 發現 {len(added)} 筆新商品：")
+        await channel.send(f"🆕 ⚠️寶子們❗看看我發現了 {tag} {len(added)} 筆新商品：")
         for item in added:
             embed = discord.Embed(title=item["title"], url=item["link"], description=f"💰 {item['price']} 円", color=0x66ccff)
             if item["image"]:
@@ -106,7 +106,7 @@ async def send_results(channel, added, removed, tag=""):
         await channel.send(f"✅ {tag} 沒有新商品。")
 
     if removed:
-        await channel.send(f"⚠️ {tag} 有 {len(removed)} 筆商品下架了：")
+        await channel.send(f"⚠️寶子們⚠️ {tag} 有 {len(removed)} 筆商品下架了：")
         for item in removed:
             embed = discord.Embed(title=item["title"], url=item["link"], color=0xff6666)
             if item["image"]:
@@ -140,7 +140,7 @@ async def helpme(interaction: discord.Interaction):
     embed.add_field(name="/check_stock", value="手動查吉伊卡哇", inline=False)
     embed.add_field(name="/check_nagono", value="手動查自嘲熊", inline=False)
     embed.add_field(name="⏰ 自動任務", value="每天 9:30 / 14:30 自動比對", inline=False)
-    embed.add_field(name="💬 對話互動", value="輸入關鍵字會有驚喜", inline=False)
+    embed.add_field(name="💬 對話互動", value="無聊可以跟我打打招呼呦", inline=False)
     await interaction.response.send_message(embed=embed)
 
 # ✅ 自動任務
@@ -149,7 +149,7 @@ async def daily_check():
     await bot.wait_until_ready()
     now = datetime.utcnow()
     h, m = (now.hour + 8) % 24, now.minute
-    if (h, m) in [(9, 30), (14, 30)]:
+    if (h, m) in [(9, 30), (00, 3)]:
         channel = bot.get_channel(CHANNEL_ID)
         if channel:
             chi_old = load_remote_db(CHIIKAWA_DB)

@@ -22,9 +22,9 @@ tree = app_commands.CommandTree(bot)
 
 # ✅ 關鍵字對話語錄
 keyword_responses = {
-    "婆婆": ["我在呢", "怎麼了寶貝", "婆婆也想你"],
-    "666": ["過來坐坐", "過來坐下"],
-    "屁眼": ["https://cdn.discordapp.com/attachments/1355201012914327594/1362651119641165975/image0.gif"]
+    "婆婆": ["我在呢🩷", "怎麼了寶貝💖", "婆婆也想你💞"],
+    "666": ["過來坐坐🪑", "過來坐下🪑"],
+    "屁眼": ["https://cdn.discordapp.com/attachments/1355201012914327594/1362651119641165975/image0.gif", "https://tenor.com/view/howlpro-howlprotocol-howl-howlup-crypto-gif-25551815", "https://tenor.com/view/taco-bell-gif-20228662"]
 }
 
 # ✅ 擷取遠端資料庫（GitHub）
@@ -82,7 +82,7 @@ async def send_results(channel, added, removed):
     await channel.send(f"🕒 我抓完了寶子們，現在是{tw_time % 24:02d}:{now.minute:02d}")
 
     if added:
-        await channel.send(f"🆕 發現 {len(added)} 筆新商品：")
+        await channel.send(f"🆕寶子們看看我發現 {len(added)} 筆新商品：")
         for item in added:
             embed = discord.Embed(title=item["title"], url=item["link"], description=f"💰 {item['price']} 円", color=0x66ccff)
             if item["image"]:
@@ -92,7 +92,7 @@ async def send_results(channel, added, removed):
         await channel.send("✅ 沒有新商品。")
 
     if removed:
-        await channel.send("寶子們有商品從官網下架了，請注意！")
+        await channel.send("⚠️寶子們❗有商品從官網下架了")
         for item in removed:
             embed = discord.Embed(title=item["title"], url=item["link"], color=0xff6666)
             if item["image"]:

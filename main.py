@@ -120,8 +120,7 @@ async def helpme_slash(interaction: discord.Interaction):
     )
     embed.add_field(name="🛍️ /check_stock", value="手動比對吉伊卡哇商品", inline=False)
     embed.add_field(name="⏰ 自動任務", value="每天 9:30、14:30 自動比對商品", inline=False)
-    embed.add_field(name="💬 對話互動", value="說「婆婆」、「666」會有驚喜語錄💬", inline=False)
-    embed.set_footer(text="Made with 🐹 by Tseng-Gina")
+    embed.add_field(name="💬 對話互動", value="無聊可以跟我打打招呼呦", inline=False)
     await interaction.response.send_message(embed=embed)
 
 # ✅ 關鍵詞語錄回應
@@ -142,6 +141,8 @@ async def daily_check():
     now = datetime.utcnow()
     tw_hour = (now.hour + 8) % 24
     if (tw_hour == 9 and now.minute == 30) or (tw_hour == 14 and now.minute == 30):
+        log_time = f"{tw_hour:02}:{minute:02}"
+        print(f"寶子們現在是⏰ [{log_time}] 今天過得好嗎")
         channel = bot.get_channel(CHANNEL_ID)
         if channel:
             old_data = load_remote_db()

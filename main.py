@@ -93,7 +93,7 @@ def compare_products(old, new):
 async def send_results(channel, added, removed, tag=""):
     now = datetime.utcnow()
     time_str = f"{(now.hour + 8)%24:02}:{now.minute:02}"
-    await channel.send(f"🕒 我抓完了 {tag} 寶子們，現在是 [{time_str}] ")
+    await channel.send(f"寶子們我抓完了{tag}，現在是🕒[{time_str}] ")
 
     if added:
         await channel.send(f"🆕 ⚠️寶子們❗看看我發現了 {tag} {len(added)} 筆新商品：")
@@ -149,7 +149,7 @@ async def daily_check():
     await bot.wait_until_ready()
     now = datetime.utcnow()
     h, m = (now.hour + 8) % 24, now.minute
-    if (h, m) in [(9, 30), (14, 30)]:
+    if (h, m) in [(9, 30), (11, 30), (13, 30), (15, 30), (17, 30)]:
         channel = bot.get_channel(CHANNEL_ID)
         if channel:
             chi_old = load_remote_db(CHIIKAWA_DB)

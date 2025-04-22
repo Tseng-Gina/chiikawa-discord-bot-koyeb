@@ -182,8 +182,8 @@ async def helpme(interaction: discord.Interaction):
 async def daily_check():
     await bot.wait_until_ready()
     now = datetime.utcnow()
-    h, m = (now.hour + 8) % 24, now.minute
-    if (h, m) in [(9, 30), (11, 30), (13, 30), (15, 30), (17, 30)]:
+    #h, m = (now.hour + 8) % 24, now.minute
+    if now.minute == 0:
         channel = bot.get_channel(CHANNEL_ID)
         if channel:
             chi_old = load_remote_db(CHIIKAWA_DB)

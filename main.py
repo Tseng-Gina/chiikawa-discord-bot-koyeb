@@ -53,11 +53,27 @@ def load_remote_db(url):
         return []
 
 # ✅ 擷取商品
+# ✅ 補貨比對邏輯
+def compare_products_with_restock(old, new):
+    old_dict = {p["link"]: p for p in old}
+    new_dict = {p["link"]: p for p in new}
+
+    added = [p for link, p in new_dict.items() if link not in old_dict]
+    removed = [p for link, p in old_dict.items() if link not in new_dict]
+
+    restocked = []
+    for link, new_item in new_dict.items():
+        old_item = old_dict.get(link)
+        if old_item and not old_item.get("in_stock") and new_item.get("in_stock"):
+            restocked.append(new_item)
+
+    return added, removed, restocked
+
+# ✅ 修改 fetch_products() 加入 in_stock
 def fetch_products(base_url):
     headers = {"User-Agent": "Mozilla/5.0"}
     page = 1
     products = []
-
     while True:
         try:
             url = f"{base_url}?page={page}"
@@ -70,27 +86,29 @@ def fetch_products(base_url):
                 title = product.get("title", "無標題")
                 handle = product.get("handle", "")
                 link = base_url.replace("/collections/all/products.json", f"/products/{handle}")
-                price = product.get("variants", [{}])[0].get("price", "未知")
+                variant = product.get("variants", [{}])[0]
+                price = variant.get("price", "未知")
+                inventory = variant.get("inventory_quantity", 0)
+                in_stock = inventory > 0
                 image = ""
                 if product.get("images") and product["images"][0].get("src"):
                     image = urljoin("https:", product["images"][0]["src"])
-                products.append({"title": title, "link": link, "price": price, "image": image})
+                products.append({
+                    "title": title,
+                    "link": link,
+                    "price": price,
+                    "image": image,
+                    "inventory": inventory,
+                    "in_stock": in_stock
+                })
             page += 1
         except Exception as e:
             print(f"❌ 抓取第 {page} 頁失敗：{e}")
             break
     return products
 
-# ✅ 比對商品
-def compare_products(old, new):
-    old_links = set(p["link"] for p in old)
-    new_links = set(p["link"] for p in new)
-    added = [p for p in new if p["link"] not in old_links]
-    removed = [p for p in old if p["link"] not in new_links]
-    return added, removed
-
-# ✅ 發送結果
-async def send_results(channel, added, removed, tag=""):
+# ✅ send_results() 支援補貨通知
+async def send_results(channel, added, removed, restocked, tag=""):
     now = datetime.utcnow()
     time_str = f"{(now.hour + 8)%24:02}:{now.minute:02}"
     await channel.send(f"寶子們我抓完了{tag}，現在是🕒[{time_str}] ")
@@ -98,7 +116,9 @@ async def send_results(channel, added, removed, tag=""):
     if added:
         await channel.send(f"🆕 ⚠️寶子們❗看看我發現了 {tag} {len(added)} 筆新商品：")
         for item in added:
-            embed = discord.Embed(title=item["title"], url=item["link"], description=f"💰 {item['price']} 円", color=0x66ccff)
+            embed = discord.Embed(title=item["title"], url=item["link"],
+                                  description=f"💰 {item['price']} 円",
+                                  color=0x66ccff)
             if item["image"]:
                 embed.set_image(url=item["image"])
             await channel.send(embed=embed)
@@ -108,12 +128,26 @@ async def send_results(channel, added, removed, tag=""):
     if removed:
         await channel.send(f"⚠️寶子們⚠️ {tag} 有 {len(removed)} 筆商品下架了：")
         for item in removed:
-            embed = discord.Embed(title=item["title"], url=item["link"], color=0xff6666)
+            embed = discord.Embed(title=item["title"], url=item["link"],
+                                  color=0xff6666)
             if item["image"]:
                 embed.set_image(url=item["image"])
             await channel.send(embed=embed)
     else:
         await channel.send(f"✅ {tag} 沒有下架商品。")
+
+    if restocked:
+        await channel.send(f"@everyone 🔔 {tag} 有 {len(restocked)} 筆商品補貨囉～")
+        for item in restocked:
+            embed = discord.Embed(title=item["title"], url=item["link"],
+                                  description=f"✅ 補貨成功！💰{item['price']} 円 | 庫存：{item['inventory']}",
+                                  color=0x66ff66)
+            if item["image"]:
+                embed.set_image(url=item["image"])
+            await channel.send(embed=embed)
+    else:
+        await channel.send(f"✅ {tag} 沒有補貨商品。")
+
 
 # ✅ Slash 指令：/check_stock
 @tree.command(name="check_stock", description="比對吉伊卡哇商品")
@@ -121,7 +155,7 @@ async def check_chiikawa(interaction: discord.Interaction):
     await interaction.response.send_message("🔍 正在比對吉伊卡哇商品...")
     old = load_remote_db(CHIIKAWA_DB)
     new = fetch_products("https://chiikawamarket.jp/collections/all/products.json")
-    added, removed = compare_products(old, new)
+    added, removed = compare_products_with_restock(old, new)
     await send_results(interaction.channel, added, removed, tag="吉伊卡哇")
 
 # ✅ Slash 指令：/check_nagono
@@ -130,7 +164,7 @@ async def check_nagono(interaction: discord.Interaction):
     await interaction.response.send_message("🔍 正在比對自嘲熊商品...")
     old = load_remote_db(NAGONO_DB)
     new = fetch_products("https://nagano-market.jp/collections/all/products.json")
-    added, removed = compare_products(old, new)
+    added, removed = compare_products_with_restock(old, new)
     await send_results(interaction.channel, added, removed, tag="自嘲熊")
 
 # ✅ Slash 指令：/helpme
@@ -154,12 +188,12 @@ async def daily_check():
         if channel:
             chi_old = load_remote_db(CHIIKAWA_DB)
             chi_new = fetch_products("https://chiikawamarket.jp/collections/all/products.json")
-            chi_added, chi_removed = compare_products(chi_old, chi_new)
+            chi_added, chi_removed = compare_products_with_restock(chi_old, chi_new)
             await send_results(channel, chi_added, chi_removed, tag="吉伊卡哇")
 
             naga_old = load_remote_db(NAGONO_DB)
             naga_new = fetch_products("https://nagano-market.jp/collections/all/products.json")
-            naga_added, naga_removed = compare_products(naga_old, naga_new)
+            naga_added, naga_removed = compare_products_with_restock(naga_old, naga_new)
             await send_results(channel, naga_added, naga_removed, tag="自嘲熊")
 
 # ✅ 對話關鍵字

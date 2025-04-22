@@ -173,7 +173,7 @@ async def helpme(interaction: discord.Interaction):
     embed = discord.Embed(title="Chiikawa Bot 幫助指令", description="🐻 支援吉伊卡哇 & 自嘲熊商品追蹤", color=0x99ccff)
     embed.add_field(name="/check_stock", value="手動查吉伊卡哇", inline=False)
     embed.add_field(name="/check_nagono", value="手動查自嘲熊", inline=False)
-    embed.add_field(name="⏰ 自動任務", value="每天 9:30 / 14:30 自動比對", inline=False)
+    embed.add_field(name="⏰ 自動任務", value="每小時自動比對一次", inline=False)
     embed.add_field(name="💬 對話互動", value="無聊可以跟我打打招呼呦", inline=False)
     await interaction.response.send_message(embed=embed)
 

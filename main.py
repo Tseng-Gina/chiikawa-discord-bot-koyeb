@@ -34,7 +34,7 @@ keyword_responses = {
     "離婚": ["<@855009651010437171>"],
     "閉嘴": ["你他媽才閉嘴"],
     "666": ["過來坐坐🪑", "過來坐下🪑"],
-    "雞巴": ["@everyone 操你媽曾靜儒"],
+    "雞巴": ["操你媽曾靜儒"],
     "正男": ["https://tenor.com/view/clash-of-clans-gif-23752619", "https://tenor.com/view/shomp-scary-goblin-running-gif-13908288"],
     "正豪": ["https://tenor.com/view/clash-of-clans-gif-23752619", "https://tenor.com/view/shomp-scary-goblin-running-gif-13908288"],
     "屌": ["https://tenor.com/view/mikhail-perez-mikhail-dick-penis-hotdog-gif-19442083", "https://tenor.com/view/mikhail-perez-mikhail-dick-penis-hotdog-gif-19442083", "https://tenor.com/view/dick-penis-dildo-forest-running-gif-16272085"],

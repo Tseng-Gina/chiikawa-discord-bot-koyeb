@@ -148,15 +148,14 @@ async def send_results(channel, added, removed, restocked, tag=""):
     else:
         await channel.send(f"✅ {tag} 沒有補貨商品。")
 
-
-# ✅ Slash 指令：/check_stock
-@tree.command(name="check_stock", description="比對吉伊卡哇商品")
+# ✅ Slash 指令：/check_chiikawa
+@tree.command(name="check_chiikawa", description="比對吉伊卡哇商品")
 async def check_chiikawa(interaction: discord.Interaction):
     await interaction.response.send_message("🔍 正在比對吉伊卡哇商品...")
     old = load_remote_db(CHIIKAWA_DB)
     new = fetch_products("https://chiikawamarket.jp/collections/all/products.json")
-    added, removed = compare_products_with_restock(old, new)
-    await send_results(interaction.channel, added, removed, tag="吉伊卡哇")
+    added, removed, restocked = compare_products_with_restock(old, new)
+    await send_results(interaction.channel, added, removed, restocked, tag="吉伊卡哇")
 
 # ✅ Slash 指令：/check_nagono
 @tree.command(name="check_nagono", description="比對自嘲熊商品")
@@ -164,16 +163,16 @@ async def check_nagono(interaction: discord.Interaction):
     await interaction.response.send_message("🔍 正在比對自嘲熊商品...")
     old = load_remote_db(NAGONO_DB)
     new = fetch_products("https://nagano-market.jp/collections/all/products.json")
-    added, removed = compare_products_with_restock(old, new)
-    await send_results(interaction.channel, added, removed, tag="自嘲熊")
+    added, removed, restocked = compare_products_with_restock(old, new)
+    await send_results(interaction.channel, added, removed, restocked, tag="自嘲熊")
 
 # ✅ Slash 指令：/helpme
 @tree.command(name="helpme", description="顯示可用功能")
 async def helpme(interaction: discord.Interaction):
     embed = discord.Embed(title="Chiikawa Bot 幫助指令", description="🐻 支援吉伊卡哇 & 自嘲熊商品追蹤", color=0x99ccff)
-    embed.add_field(name="/check_stock", value="手動查吉伊卡哇", inline=False)
+    embed.add_field(name="/check_chiikawa", value="手動查吉伊卡哇", inline=False)
     embed.add_field(name="/check_nagono", value="手動查自嘲熊", inline=False)
-    embed.add_field(name="⏰ 自動任務", value="每小時自動比對一次", inline=False)
+    embed.add_field(name="⏰ 自動任務", value="上班時間每小時自動比對一次", inline=False)
     embed.add_field(name="💬 對話互動", value="無聊可以跟我打打招呼呦", inline=False)
     await interaction.response.send_message(embed=embed)
 
@@ -182,19 +181,22 @@ async def helpme(interaction: discord.Interaction):
 async def daily_check():
     await bot.wait_until_ready()
     now = datetime.utcnow()
-    h, m = (now.hour + 8) % 24, now.minute
-    if m == 0:
+    tw_hour = (now.hour + 8) % 24
+    tw_minute = now.minute
+
+    # ✅ 只在早上 8:00 ～ 下午 18:00 的整點執行
+    if 8 <= tw_hour <= 18 and tw_minute == 0:
         channel = bot.get_channel(CHANNEL_ID)
         if channel:
             chi_old = load_remote_db(CHIIKAWA_DB)
             chi_new = fetch_products("https://chiikawamarket.jp/collections/all/products.json")
-            chi_added, chi_removed = compare_products_with_restock(chi_old, chi_new)
-            await send_results(channel, chi_added, chi_removed, tag="吉伊卡哇")
+            chi_added, chi_removed, chi_restocked = compare_products_with_restock(chi_old, chi_new)
+            await send_results(channel, chi_added, chi_removed, chi_restocked, tag="吉伊卡哇")
 
             naga_old = load_remote_db(NAGONO_DB)
             naga_new = fetch_products("https://nagano-market.jp/collections/all/products.json")
-            naga_added, naga_removed = compare_products_with_restock(naga_old, naga_new)
-            await send_results(channel, naga_added, naga_removed, tag="自嘲熊")
+            naga_added, naga_removed, naga_restocked = compare_products_with_restock(naga_old, naga_new)
+            await send_results(channel, naga_added, naga_removed, naga_restocked, tag="自嘲熊")
 
 # ✅ 對話關鍵字
 @bot.event

@@ -112,6 +112,18 @@ async def send_results(channel, removed, restocked, tag=""):
     time_str = f"{(now.hour + 8)%24:02}:{now.minute:02}"
     await channel.send(f"寶子們我抓完了{tag}，現在是🕒[{time_str}] ")
 
+
+    if removed:
+        await channel.send(f"⚠️寶子們⚠️ {tag} 有 {len(removed)} 筆商品下架了：")
+        for item in removed:
+            embed = discord.Embed(title=item["title"], url=item["link"],
+                                  color=0xff6666)
+            if item["image"]:
+                embed.set_image(url=item["image"])
+            await channel.send(embed=embed)
+    else:
+        await channel.send(f"✅ {tag} 沒有下架商品。")
+
     if restocked:
         await channel.send(f"@everyone 🔔 {tag} 有 {len(restocked)} 筆商品補貨囉～")
         for item in restocked:

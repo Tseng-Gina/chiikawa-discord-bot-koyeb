@@ -109,32 +109,37 @@ def fetch_products(base_url):
 # ✅ send_results() 支援補貨通知
 async def send_results(channel, removed, restocked, tag=""):
     now = datetime.utcnow()
-    time_str = f"{(now.hour + 8)%24:02}:{now.minute:02}"
-    await channel.send(f"寶子們我抓完了{tag}，現在是🕒[{time_str}] ")
+    time_str = f"{(now.hour + 8) % 24:02}:{now.minute:02}"
 
+    message = f"寶子們我抓完了{tag}，現在是🕒[{time_str}] \n"
+
+    if not removed and not restocked:
+        message += f"✅ {tag} 沒有下架商品，沒有補貨商品哦～"
+        await channel.send(message)
+        return  # 如果都沒有，就不用再繼續下面的 embed 發送了！
+
+    await channel.send(message)
 
     if removed:
         await channel.send(f"⚠️寶子們⚠️ {tag} 有 {len(removed)} 筆商品下架了：")
         for item in removed:
-            embed = discord.Embed(title=item["title"], url=item["link"],
-                                  color=0xff6666)
+            embed = discord.Embed(title=item["title"], url=item["link"], color=0xff6666)
             if item["image"]:
                 embed.set_image(url=item["image"])
             await channel.send(embed=embed)
-    else:
-        await channel.send(f"✅ {tag} 沒有下架商品。")
 
     if restocked:
         await channel.send(f"@everyone 🔔 {tag} 有 {len(restocked)} 筆商品補貨囉～")
         for item in restocked:
-            embed = discord.Embed(title=item["title"], url=item["link"],
-                                  description=f"✅ 補貨成功！💰{item['price']} 円 | 庫存：{item['inventory']}",
-                                  color=0x66ff66)
+            embed = discord.Embed(
+                title=item["title"],
+                url=item["link"],
+                description=f"✅ 補貨成功！💰{item['price']} 円 | 庫存：{item['inventory']}",
+                color=0x66ff66
+            )
             if item["image"]:
                 embed.set_image(url=item["image"])
             await channel.send(embed=embed)
-    else:
-        await channel.send(f"✅ {tag} 沒有補貨商品。")
 
 # ✅ Slash 指令：/check_chiikawa
 @tree.command(name="check_chiikawa", description="比對吉伊卡哇商品")

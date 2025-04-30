@@ -111,10 +111,10 @@ async def send_results(channel, removed, restocked, tag=""):
     now = datetime.utcnow()
     time_str = f"{(now.hour + 8) % 24:02}:{now.minute:02}"
 
-    message = f"寶子們我抓完了{tag}，現在是🕒[{time_str}] \n"
+    message = f"寶子們現在是🕒[{time_str}]"
 
     if not removed and not restocked:
-        message += f"✅ {tag} 沒有下架商品，沒有補貨商品哦～"
+        message += f"✅ {tag} 沒有下架&補貨商品呦💖"
         await channel.send(message)
         return  # 如果都沒有，就不用再繼續下面的 embed 發送了！
 
